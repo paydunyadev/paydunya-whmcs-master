@@ -200,21 +200,35 @@ function paydunyagatewaymodule_postToUrl($url, $data, $masterKey, $privateKey , 
     $master_key = trim($masterKey);
     $private_key = trim($privateKey);
     $token = trim($toKen);
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_NOBODY, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+      "PAYDUNYA-MASTER-KEY: $master_key",
+      "PAYDUNYA-PRIVATE-KEY: $private_key",
+      "PAYDUNYA-TOKEN: $token"
+    ));
     
-    curl_setopt_array($ch, array(
-        CURLOPT_URL => $url,
-        CURLOPT_NOBODY => false,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => $json,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_HTTPHEADER => array(
-            "PAYDUNYA-MASTER-KEY: $master_key",
-            "PAYDUNYA-PRIVATE-KEY: $private_key",
-            "PAYDUNYA-TOKEN: $token"
-            ),
-        )
-    );
+    // curl_setopt_array($ch, array(
+    //     CURLOPT_URL => $url,
+    //     CURLOPT_NOBODY => false,
+    //     CURLOPT_RETURNTRANSFER => true,
+    //     CURLOPT_POST => true,
+    //     CURLOPT_POSTFIELDS => $json,
+    //     CURLOPT_SSL_VERIFYPEER => false,
+    //     CURLOPT_HTTPHEADER => array(
+    //         "PAYDUNYA-MASTER-KEY: $master_key",
+    //         "PAYDUNYA-PRIVATE-KEY: $private_key",
+    //         "PAYDUNYA-TOKEN: $token"
+    //         ),
+    //     )
+    // );
 
     $response = curl_exec($ch);
     $response_decoded = json_decode($response);
