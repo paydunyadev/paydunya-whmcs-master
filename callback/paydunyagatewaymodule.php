@@ -201,18 +201,30 @@ function paydunyagatewaymodule_checkPaydunyaResponse($invoice_token, $master_key
 
             $ch = curl_init();        
             $url = $geturl.$invoice_token;
-    
-            curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_NOBODY => false,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_HTTPHEADER => array(
-                    "PAYDUNYA-MASTER-KEY: $master_key",
-                    "PAYDUNYA-PRIVATE-KEY: $private_key",
-                    "PAYDUNYA-TOKEN: $token"
-                ),
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_NOBODY, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "PAYDUNYA-MASTER-KEY: $master_key",
+                "PAYDUNYA-PRIVATE-KEY: $private_key",
+                "PAYDUNYA-TOKEN: $token"
             ));
+    
+            // curl_setopt_array($ch, array(
+            //     CURLOPT_URL => $url,
+            //     CURLOPT_NOBODY => false,
+            //     CURLOPT_RETURNTRANSFER => true,
+            //     CURLOPT_SSL_VERIFYPEER => false,
+            //     CURLOPT_HTTPHEADER => array(
+            //         "PAYDUNYA-MASTER-KEY: $master_key",
+            //         "PAYDUNYA-PRIVATE-KEY: $private_key",
+            //         "PAYDUNYA-TOKEN: $token"
+            //     ),
+            // ));
 
             $response = curl_exec($ch);
             $response_decoded = json_decode($response);
